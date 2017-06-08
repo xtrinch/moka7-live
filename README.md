@@ -1,5 +1,15 @@
 # moka7-live
 
+## Installation
+
+Package can be installed via maven by adding the following to your pom.xml:
+
+    <dependency>
+        <groupId>si.trina</groupId>
+        <artifactId>moka7-live</artifactId>
+        <version>0.0.5</version>
+    </dependency>
+    
 ## How to use
 
 **1. Create classes that implement interface PLCListener**
@@ -72,13 +82,3 @@ try {
     e.printStackTrace(); 
 }
 ```
-
-## Setup
-
-Package can be installed via maven by adding the following to your pom.xml:
-
-    <dependency>
-        <groupId>si.trina</groupId>
-        <artifactId>moka7-live</artifactId>
-        <version>0.0.2</version>
-    </dependency>
