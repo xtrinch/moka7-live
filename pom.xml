@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>si.trina</groupId>
   <artifactId>moka7-live</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <packaging>jar</packaging>
   <name>moka7-live</name>
   <description>Communication with s7 PLCs helper classes</description>
@@ -18,7 +18,7 @@
 	<connection>scm:git:git://github.com/xtrinch/moka7-live.git</connection>
 	<developerConnection>scm:git:git@github.com:xtrinch/moka7-live.git</developerConnection>
 	<url>http://github.com/xtrinch/moka7-live</url>
-	<tag>moka7-live-0.0.4</tag>
+	<tag>moka7-live-0.0.5</tag>
   </scm>
   <developers>
 	<developer>
