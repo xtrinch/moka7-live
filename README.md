@@ -4,7 +4,7 @@
 
 **1. Create classes that implement interface PLCListener**
 
-**2. Create classes for every PLC you wish to receive bit changes / read integers, bits from**
+**2. Create PLC class instances for every PLC you wish to receive bit changes / read integers, bits from**
 
 ``` 
 import si.trina.moka7.live.PLC;
@@ -66,8 +66,8 @@ plc1.putDInt(false, 12, 3);
 **6. Read shorts/integers from DB**
 ```
 try {
-    short aShort = this.plc.getInt(true, 8); // 2 bytes
-    int anInteger = this.plc.getDInt(true, 8); // 4 bytes
+    short aShort = plc1.getInt(true, 8); // 2 bytes
+    int anInteger = plc1.getDInt(true, 8); // 4 bytes
 } catch (Exception e) { 
     e.printStackTrace(); 
 }
