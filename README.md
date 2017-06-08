@@ -80,5 +80,5 @@ Package can be installed via maven by adding the following to your pom.xml:
     <dependency>
         <groupId>si.trina</groupId>
         <artifactId>moka7-live</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2</version>
     </dependency>
