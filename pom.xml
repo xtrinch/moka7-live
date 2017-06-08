@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>si.trina</groupId>
   <artifactId>moka7-live</artifactId>
-  <version>0.0.4-SNAPSHOT</version>
+  <version>0.0.4</version>
   <packaging>jar</packaging>
   <name>moka7-live</name>
   <description>Communication with s7 PLCs helper classes</description>
