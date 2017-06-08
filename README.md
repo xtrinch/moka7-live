@@ -7,6 +7,8 @@
 **2. Create classes for every PLC you wish to receive bit changes / read integers, bits from**
 
 ``` 
+import si.trina.moka7.live.PLC;
+
 /*
     args: 
         ** name of PLC
@@ -32,6 +34,8 @@ plc2.listeners.add(myListener);
 **4. Receive bit changes from bits at addresses from last argument of PLC constructor**
 
 ```
+import si.trina.moka7.live.PLCListener;
+
 public class PLCListenerImplementation implements PLCListener {
     @Override
     public void PLCBitChanged(int address, int pos, boolean val, String plcName) {
@@ -45,3 +49,36 @@ public class PLCListenerImplementation implements PLCListener {
     }
 }
 ```
+
+**5. Write shorts/integers to DB**
+
+```
+/*
+    args: 
+        ** database to write to: from plc = true, from pc = false
+        ** address to write to
+        ** short/integer to write to db
+*/
+plc1.putInt(false, 12, (short)3);
+plc1.putDInt(false, 12, 3);
+```
+
+**6. Read shorts/integers from DB**
+```
+try {
+    short aShort = this.plc.getInt(true, 8); // 2 bytes
+    int anInteger = this.plc.getDInt(true, 8); // 4 bytes
+} catch (Exception e) { 
+    e.printStackTrace(); 
+}
+```
+
+## Setup
+
+Package can be installed via maven by adding the following to your pom.xml:
+
+    <dependency>
+        <groupId>si.trina</groupId>
+        <artifactId>moka7-live</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
