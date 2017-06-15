@@ -44,11 +44,11 @@ plc2.listeners.add(myListener);
 **4. Start a thread for each PLC instance**
 
 ```
-	Thread t1 = new Thread(plc1).start();
-    Thread t2 = new Thread(plc2).start();
+Thread t1 = new Thread(plc1).start();
+Thread t2 = new Thread(plc2).start();
 ```
 
-**4. Receive bit changes from bits at addresses from last argument of PLC constructor**
+**5. Receive bit changes from bits at addresses from last argument of PLC constructor**
 
 ```
 import si.trina.moka7.live.PLCListener;
@@ -67,7 +67,7 @@ public class PLCListenerImplementation implements PLCListener {
 }
 ```
 
-**5. Write shorts/integers to DB**
+**6. Write shorts/integers to DB**
 
 ```
 /*
@@ -80,7 +80,7 @@ plc1.putInt(false, 12, (short)3);
 plc1.putDInt(false, 12, 3);
 ```
 
-**6. Read shorts/integers from DB**
+**7. Read shorts/integers from DB**
 ```
 try {
     short aShort = plc1.getInt(true, 8); // 2 bytes
