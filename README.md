@@ -41,6 +41,13 @@ plc1.listeners.add(myListener);
 plc2.listeners.add(myListener);
 ```
 
+**4. Start a thread for each PLC instance**
+
+```
+	Thread t1 = new Thread(plc1).start();
+    Thread t2 = new Thread(plc2).start();
+```
+
 **4. Receive bit changes from bits at addresses from last argument of PLC constructor**
 
 ```
