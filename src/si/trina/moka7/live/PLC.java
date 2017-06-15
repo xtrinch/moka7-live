@@ -50,6 +50,7 @@ public class PLC implements Runnable {
 		this.pcToPlcLock = new Object();
 		this.plcToPcLock = new Object();
 		this.PLCSyncObj = new Object();
+		this.listeners = new ArrayList<PLCListener>();
 	}
 	
 	public void processPLCEvents() {
