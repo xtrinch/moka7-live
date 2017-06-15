@@ -12,7 +12,7 @@ import com.sourceforge.snap7.moka7.S7Client;
 
 public class PLC implements Runnable {
 
-	private ArrayList<PLCListener> listeners;
+	public ArrayList<PLCListener> listeners;
 	public Object PLCSyncObj;
 
 	private int plcToPcDb;
