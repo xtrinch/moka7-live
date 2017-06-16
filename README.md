@@ -1,3 +1,6 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/si.trina/moka7-live/badge.svg)](https://maven-badges.herokuapp.com/maven-central/si.trina/moka7-live)
+
+
 # moka7-live
 
 This is a library built around [moka7](http://snap7.sourceforge.net/moka7.html) created by Dave Nardella. Moka7 is is the Java port of Snap7 Client. It’s a pure Java implementation of the S7Protocol used to communicate with S7 PLCs.
