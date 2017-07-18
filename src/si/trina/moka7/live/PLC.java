@@ -35,7 +35,8 @@ public class PLC implements Runnable {
 	private Object plcToPcLock,pcToPlcLock;
 	
 	public boolean connected = false;
-	
+	public boolean liveBitEnabled = false;
+
 	public PLC(String name,String ip,byte[] plcToPc,byte[] pcToPlc,int plcToPcDb,int pcToPlcDb,double[] booleans) {
 		this.plcToPc = plcToPc;
 		this.pcToPlc = pcToPlc;
@@ -404,7 +405,9 @@ public class PLC implements Runnable {
 						this.firstConnect = false;
 					}
 					this.refreshPLCStatus();
-					this.checkSetLiveBit();
+					if (this.liveBitEnabled) {
+						this.checkSetLiveBit();
+					}
 				}
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
