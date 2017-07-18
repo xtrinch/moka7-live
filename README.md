@@ -99,7 +99,7 @@ try {
 
 ## Optional
 
-**1. Check communication status
+**1. Check communication status**
 
 Sets bit at address 0.0 in both DB's as the 'live bit', meaning it toggles it every 250ms and expects PLC to toggle it back. Throws exception if it doesn't.
 
