@@ -252,6 +252,36 @@ public class PLC implements Runnable {
 		return true;
 	}
 
+	public boolean putIntToByte(boolean fromPLC,int address,short val) {
+		byte[] source;
+		if (val > 255 || val < 0) {
+			System.out.println("Value out of boundaries");
+			return false;
+		}
+		if (fromPLC) {
+			synchronized (this.plcToPcLock) {
+				source = this.plcToPc;
+				if (address >= source.length) {
+					System.out.println("PLC out of boundaries");
+					return false;
+				} else {
+					source[address] = (byte)val;
+				}
+			}
+		} else {
+			synchronized (this.pcToPlcLock) {
+				source = this.pcToPlc;
+				if (address >= source.length) {
+					System.out.println("PLC out of boundaries");
+					return false;
+				} else {
+					source[address] = (byte)val;
+				}
+			}
+		}
+		return true;
+	}
+
 	public void putDIntDecimal(boolean fromPLC,int address, double val) throws Exception {
 		this.putDInt(fromPLC, address, (int)val*100);
 	}
@@ -336,6 +366,29 @@ public class PLC implements Runnable {
 					throw new Exception("PLC out of boundaries");
 				}
 				return ((source[address] & 0xff) << 8) | (source[address+1] & 0xff);
+			}
+		}
+	}
+	
+	public int getIntFromByte(boolean fromPLC,int address) throws Exception {
+		byte[] source;
+		if (fromPLC) {
+			synchronized (this.plcToPcLock) {
+				source = this.plcToPc;
+				if (address >= source.length) {
+					throw new Exception("PLC out of boundaries");
+				}
+				Byte b = new Byte(source[address]);
+				return b.intValue();
+			}
+		} else {
+			synchronized (this.pcToPlcLock) {
+				source = this.pcToPlc;
+				if (address >= source.length) {
+					throw new Exception("PLC out of boundaries");
+				}
+				Byte b = new Byte(source[address]);
+				return b.intValue();
 			}
 		}
 	}
