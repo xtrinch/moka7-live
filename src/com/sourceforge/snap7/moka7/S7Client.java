@@ -538,6 +538,32 @@ public class S7Client
             }	            
         }
         Connected=LastError==0;
+        
+        // In case the connection is not completely established (TCP connection + ISO connection + PDU negotiation)
+        // we close the socket and its IO streams to revert the object back to pre-Connect() state
+        if (!Connected)
+        {
+            if (TCPSocket != null) {
+                try {
+                    TCPSocket.close();
+                } catch (IOException ex) {
+                }
+            }
+            if (InStream != null) {
+                try {
+                    InStream.close();
+                } catch (IOException ex) {
+                }
+            }
+            if (OutStream != null) {
+                try {
+                    OutStream.close();
+                } catch (IOException ex) {
+                }
+            }
+            _PDULength = 0;
+        }                
+        
 	return LastError;
     }
     
