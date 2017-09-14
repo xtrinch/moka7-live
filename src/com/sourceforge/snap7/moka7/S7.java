@@ -66,7 +66,7 @@ public class S7 {
         int Value = Buffer[Pos] & 0x0FF;
         byte[] Mask = {
             (byte)0x01,(byte)0x02,(byte)0x04,(byte)0x08,
-            (byte)0x10,(byte)0x10,(byte)0x40,(byte)0x80
+            (byte)0x10,(byte)0x20,(byte)0x40,(byte)0x80
         };   
         if (Bit<0) Bit=0;
         if (Bit>7) Bit=7;
