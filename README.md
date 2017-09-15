@@ -101,8 +101,12 @@ try {
 
 **1. Check communication status**
 
-Sets bit at address 0.0 in both DB's as the 'live bit', meaning it toggles it every 250ms and expects PLC to toggle it back. Throws exception if it doesn't.
+The following example settings set bit at address 0.0 in both DB's as the 'live bit', meaning it toggles it every 250ms and expects PLC to toggle it back every 500ms. Throws exception if it doesn't.
 
 ```
     plc1.liveBitEnabled = true;
+    plc1.liveBitAddress = 0;
+    plc1.liveBitPosition = 0;
+    plc1.liveBitPCDuration = 250;
+    plc1.liveBitPLCDuration = 500;
 ```
