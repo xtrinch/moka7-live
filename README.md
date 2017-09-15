@@ -14,7 +14,7 @@ Package can be installed via maven by adding the following to your pom.xml:
     <dependency>
         <groupId>si.trina</groupId>
         <artifactId>moka7-live</artifactId>
-        <version>0.0.9</version>
+        <version>0.0.10</version>
     </dependency>
     
 ## How to use
@@ -100,6 +100,8 @@ try {
 ## Optional
 
 **1. Check communication status**
+
+Communication status can optionally be continuously checked with the help of a 'live bit'.
 
 The following example settings set bit at address 0.0 in both DB's as the 'live bit', meaning it toggles it every 250ms and expects PLC to toggle it back every 500ms. Throws exception if it doesn't.
 
