@@ -62,6 +62,7 @@ public class S7Client
     private DataOutputStream OutStream = null;
             
     private String IPAddress;
+    private int TCPPort;
            
     private byte LocalTSAP_HI;
     private byte LocalTSAP_LO;
@@ -340,7 +341,7 @@ public class S7Client
     
     private int TCPConnect() 
     {
-        SocketAddress sockaddr = new InetSocketAddress(IPAddress, ISOTCP);
+        SocketAddress sockaddr = new InetSocketAddress(IPAddress, TCPPort);
         LastError=0;
         try {                       
             TCPSocket = new Socket(); 
@@ -582,10 +583,15 @@ public class S7Client
         }
     }
     
-    public int ConnectTo(String Address, int Rack, int Slot) 
+    public int ConnectTo(String Address, int Rack, int Slot) {
+      //Use the default port 
+      return ConnectTo(Address, Rack, Slot, ISOTCP); 
+    }
+    
+    public int ConnectTo(String Address, int Rack, int Slot,int Port) 
     {       
         int RemoteTSAP=(ConnType<<8)+ (Rack * 0x20) + Slot;
-        SetConnectionParams(Address, 0x0100, RemoteTSAP);
+        SetConnectionParams(Address, Port, 0x0100, RemoteTSAP);
         return Connect();
     }
     
@@ -594,11 +600,15 @@ public class S7Client
         return _PDULength;
     }
     
-    public void SetConnectionParams(String Address, int LocalTSAP, int RemoteTSAP)
+    public void SetConnectionParams(String Address, int LocalTSAP, int RemoteTSAP) {
+        SetConnectionParams(Address, ISOTCP, LocalTSAP, RemoteTSAP);
+    }
+    public void SetConnectionParams(String Address, int Port, int LocalTSAP, int RemoteTSAP)
     {
         int LocTSAP = LocalTSAP & 0x0000FFFF;
         int RemTSAP = RemoteTSAP & 0x0000FFFF;        
         IPAddress    =  Address;
+        TCPPort = Port;
         LocalTSAP_HI = (byte) (LocTSAP>>8);
         LocalTSAP_LO = (byte) (LocTSAP & 0x00FF);
         RemoteTSAP_HI= (byte) (RemTSAP>>8);
