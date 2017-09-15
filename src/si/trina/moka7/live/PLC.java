@@ -36,6 +36,10 @@ public class PLC implements Runnable {
 	
 	public boolean connected = false;
 	public boolean liveBitEnabled = false;
+	public short liveBitAddress = 0;
+	public short liveBitPosition = 0;
+	public short liveBitPCDuration = 250; // in ms
+	public short liveBitPLCDuration = 500; // in ms
 
 	public PLC(String name,String ip,byte[] plcToPc,byte[] pcToPlc,int plcToPcDb,int pcToPlcDb,double[] booleans) {
 		this.plcToPc = plcToPc;
@@ -421,17 +425,17 @@ public class PLC implements Runnable {
 	}
 
 	public void checkSetLiveBit() throws Exception {
-		if ((System.nanoTime() - this.pcToPlcLiveBit) > 200000000) {
-			this.inverseBit(false, 0, 0);
+		if ((System.nanoTime() - this.pcToPlcLiveBit) > this.liveBitPCDuration * 1000000) {
+			this.inverseBit(false, this.liveBitAddress, this.liveBitPosition);
 			this.pcToPlcLiveBit = System.nanoTime();
 		}
-		if (this.plcToPcLiveBitState != this.getBool(true, 0, 0)) {
+		if (this.plcToPcLiveBitState != this.getBool(true, this.liveBitAddress, this.liveBitPosition)) {
 			// Live bit changed - reset the timer
-			this.plcToPcLiveBitState = this.getBool(true, 0, 0);
+			this.plcToPcLiveBitState = this.getBool(true, this.liveBitAddress, this.liveBitPosition);
 			this.plcToPcLiveBit = System.nanoTime();
 		}
-		if ((System.nanoTime() - this.plcToPcLiveBit) > 800000000) {
-			System.out.println(this.getBool(true, 0, 0));
+		if ((System.nanoTime() - this.plcToPcLiveBit) > this.liveBitPLCDuration * 1000000) {
+			System.out.println(this.getBool(true, this.liveBitAddress, this.liveBitPosition));
 			System.out.println(System.nanoTime() - this.plcToPcLiveBit);
 			this.moka.Disconnect();
 			this.moka.Connected = false;
@@ -454,7 +458,7 @@ public class PLC implements Runnable {
 						this.moka.ReadArea(S7.S7AreaDB, this.pcToPlcDb, 0, this.pcToPlc.length, this.pcToPlc);
 						this.pcToPlcLiveBit = System.nanoTime();
 						this.plcToPcLiveBit = System.nanoTime();
-						this.plcToPcLiveBitState = this.getBool(true, 0, 0);
+						this.plcToPcLiveBitState = this.getBool(true, this.liveBitAddress, this.liveBitPosition);
 						this.firstConnect = false;
 					}
 					this.refreshPLCStatus();
