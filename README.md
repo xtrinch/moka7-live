@@ -74,7 +74,7 @@ public class PLCListenerImplementation implements PLCListener {
 }
 ```
 
-**6. Write shorts/integers to DB**
+**6. Write shorts/integers/booleans to DB**
 
 ```
 /*
@@ -85,13 +85,23 @@ public class PLCListenerImplementation implements PLCListener {
 */
 plc1.putInt(false, 12, (short)3);
 plc1.putDInt(false, 12, 3);
+
+/*
+    args:
+        ** database to write to: from plc = true, from pc = false
+        ** address to write to
+        ** bit offset at address to write to
+        ** value to write
+*/
+plc1.putBool(false, 0, 1, true);
 ```
 
-**7. Read shorts/integers from DB**
+**7. Read shorts/integers/booleans from DB**
 ```
 try {
     short aShort = plc1.getInt(true, 8); // 2 bytes
     int anInteger = plc1.getDInt(true, 8); // 4 bytes
+    boolean aBoolean = plc1.getBool(true, 0, 2);
 } catch (Exception e) { 
     e.printStackTrace(); 
 }
