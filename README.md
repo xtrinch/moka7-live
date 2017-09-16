@@ -14,7 +14,7 @@ Package can be installed via maven by adding the following to your pom.xml:
     <dependency>
         <groupId>si.trina</groupId>
         <artifactId>moka7-live</artifactId>
-        <version>0.0.10</version>
+        <version>0.0.11</version>
     </dependency>
     
 ## How to use
