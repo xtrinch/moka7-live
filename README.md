@@ -94,6 +94,7 @@ plc1.putDInt(false, 12, 3);
         ** value to write
 */
 plc1.putBool(false, 0, 1, true);
+plc1.signalBoolean(false, 0, 1, true); // resets to false after 300ms
 ```
 
 **7. Read shorts/integers/booleans from DB**
