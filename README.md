@@ -110,7 +110,7 @@ try {
 
 ## Optional
 
-**1. Check communication status**
+**Check communication status**
 
 Communication status can optionally be continuously checked with the help of a 'live bit'.
 
@@ -123,3 +123,9 @@ The following example settings set bit at address 0.0 in both DB's as the 'live 
     plc1.liveBitPCDuration = 250;
     plc1.liveBitPLCDuration = 500;
 ```
+
+## Misc
+
+**PLC connection status**
+
+Boolean indicating whether a PLC is connected or not can be found in PLC class' public variable `connected`.
