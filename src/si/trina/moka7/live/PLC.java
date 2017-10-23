@@ -169,7 +169,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length || pos > 7) {
-					System.out.println("PLC out of boundaries");
+					System.out.println("PLC out of boundaries: " + this.PLCName);
 					return false;
 				} else {
 					if (val == true) {
@@ -183,7 +183,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length || pos > 7) {
-					System.out.println("PLC out of boundaries");
+					System.out.println("PLC out of boundaries: " + this.PLCName);
 					return false;
 				} else {
 					if (val == true) {
