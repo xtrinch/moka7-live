@@ -138,7 +138,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length || pos > 7) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 				} else {
 					if((((byte)source[address]) & (0x01 << pos)) > 0) {
 						source[address] &= ~(1 << pos);
@@ -151,7 +151,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length || pos > 7) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 				} else {
 					if((((byte)source[address]) & (0x01 << pos)) > 0) {
 						source[address] &= ~(1 << pos);
@@ -169,7 +169,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length || pos > 7) {
-					System.out.println("PLC out of boundaries: " + this.PLCName);
+					System.out.println("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 					return false;
 				} else {
 					if (val == true) {
@@ -183,7 +183,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length || pos > 7) {
-					System.out.println("PLC out of boundaries: " + this.PLCName);
+					System.out.println("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 					return false;
 				} else {
 					if (val == true) {
@@ -234,7 +234,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length-1) {
-					System.out.println("PLC out of boundaries: " + this.PLCName);
+					System.out.println("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 					return false;
 				} else {
 					source[address] = spl[0];
@@ -245,7 +245,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length-1) {
-					System.out.println("PLC out of boundaries: " + this.PLCName);
+					System.out.println("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 					return false;
 				} else {
 					source[address] = spl[0];
@@ -266,7 +266,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length) {
-					System.out.println("PLC out of boundaries: " + this.PLCName);
+					System.out.println("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 					return false;
 				} else {
 					source[address] = (byte)val;
@@ -276,7 +276,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length) {
-					System.out.println("PLC out of boundaries: " + this.PLCName);
+					System.out.println("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 					return false;
 				} else {
 					source[address] = (byte)val;
@@ -299,7 +299,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length-3) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 				} else {
 					source[address] = spl[0];
 					source[address+1] = spl[1];
@@ -311,7 +311,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length-3) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 				} else {
 					source[address] = spl[0];
 					source[address+1] = spl[1];
@@ -328,7 +328,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length || pos > 7) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 				}
 				int q = ((byte)source[address]) & (0x01 << pos) ;
 				if (q == 0) {
@@ -341,7 +341,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length || pos > 7) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 				}
 				int q = ((byte)source[address]) & (0x01 << pos) ;
 				if (q == 0) {
@@ -359,7 +359,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length-1) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 				}
 				return ((source[address] & 0xff) << 8) | (source[address+1] & 0xff);
 			}
@@ -367,7 +367,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length-1) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 				}
 				return ((source[address] & 0xff) << 8) | (source[address+1] & 0xff);
 			}
@@ -380,7 +380,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 				}
 				Byte b = new Byte(source[address]);
 				return b.intValue();
@@ -389,7 +389,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 				}
 				Byte b = new Byte(source[address]);
 				return b.intValue();
@@ -403,7 +403,7 @@ public class PLC implements Runnable {
 			synchronized (this.plcToPcLock) {
 				source = this.plcToPc;
 				if (address >= source.length-3) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
 				}
 				ByteBuffer b = ByteBuffer.allocate(4);
 				b.put(source, address, 4);
@@ -414,7 +414,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length-3) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName);
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 				}
 				ByteBuffer b = ByteBuffer.allocate(4);
 				b.put(source, address, 4);
