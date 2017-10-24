@@ -7,17 +7,26 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sourceforge.snap7.moka7.S7;
 import com.sourceforge.snap7.moka7.S7Client;
 
 public class PLC implements Runnable {
 
+	final Logger logger = LoggerFactory.getLogger(PLC.class);
+	
 	public ArrayList<PLCListener> listeners;
 	public Object PLCSyncObj;
 
 	private int plcToPcDb;
 	private int pcToPlcDb;
-	
+	private int rack = 0;
+	private int slot = 1;
+	private int plcToPcAreaType = S7.S7AreaDB; // optionally read merker, eingang, ausgang area
+	private int pcToPlcAreaType = S7.S7AreaDB;
+
 	private long plcToPcLiveBit;
 	private long pcToPlcLiveBit;
 	private boolean plcToPcLiveBitState;
@@ -56,6 +65,37 @@ public class PLC implements Runnable {
 		this.plcToPcLock = new Object();
 		this.PLCSyncObj = new Object();
 		this.listeners = new ArrayList<PLCListener>();
+	}
+	
+	public PLC(String name,
+					String ip,
+					int plcToPcLength,
+					int pcToPlcLength,
+					int plcToPcDb,
+					int pcToPlcDb,
+					double[] booleans, 
+					int rack, 
+					int slot, 
+					int plcToPcAreaType, 
+					int pcToPlcAreaType) {
+		this.plcToPc = new byte[plcToPcLength];
+		this.pcToPlc = new byte[pcToPlcLength];
+		this.PLCName = name;
+		this.PLCIp = ip;
+		this.moka = new S7Client();
+		this.moka.SetConnectionType(S7.OP);
+		this.plcToPcDb = plcToPcDb;
+		this.pcToPlcDb = pcToPlcDb;
+		this.boolBitChange = new HashMap<Double, Boolean>();
+		this.booleans = booleans;
+		this.pcToPlcLock = new Object();
+		this.plcToPcLock = new Object();
+		this.PLCSyncObj = new Object();
+		this.listeners = new ArrayList<PLCListener>();
+		this.rack = rack;
+		this.slot = slot;
+		this.pcToPlcAreaType = pcToPlcAreaType;
+		this.plcToPcAreaType = plcToPcAreaType;
 	}
 	
 	public void processPLCEvents() {
@@ -124,10 +164,10 @@ public class PLC implements Runnable {
 	public void refreshPLCStatus() {
 		// Update incoming
 		synchronized (this.plcToPcLock) {
-			this.moka.ReadArea(S7.S7AreaDB, this.plcToPcDb, 0, this.plcToPc.length, this.plcToPc);
+			this.moka.ReadArea(this.plcToPcAreaType, this.plcToPcDb, 0, this.plcToPc.length, this.plcToPc);
 		}
 		synchronized (this.pcToPlcLock) {
-			this.moka.WriteArea(S7.S7AreaDB, this.pcToPlcDb, 0, this.pcToPlc.length, this.pcToPlc);
+			this.moka.WriteArea(this.pcToPlcAreaType, this.pcToPlcDb, 0, this.pcToPlc.length, this.pcToPlc);
 		}
 		this.processPLCEvents();
 	}
@@ -449,13 +489,14 @@ public class PLC implements Runnable {
 			try {
 				if (this.moka.Connected == false) {
 					this.connected = false;
-					this.moka.ConnectTo(this.PLCIp, 0, 1);
+					int error = this.moka.ConnectTo(this.PLCIp, this.rack, this.slot);
+					if (error > 0) {
+						logger.error(S7Client.ErrorText(error));
+					}
 				} else {
 					this.connected = true;
 					if (this.firstConnect == true) {
-						System.out.println("Connected to PLC: " + this.PLCIp);
-
-						this.moka.ReadArea(S7.S7AreaDB, this.pcToPlcDb, 0, this.pcToPlc.length, this.pcToPlc);
+						this.moka.ReadArea(this.pcToPlcAreaType, this.pcToPlcDb, 0, this.pcToPlc.length, this.pcToPlc);
 						this.pcToPlcLiveBit = System.nanoTime();
 						this.plcToPcLiveBit = System.nanoTime();
 						this.plcToPcLiveBitState = this.getBool(true, this.liveBitAddress, this.liveBitPosition);
