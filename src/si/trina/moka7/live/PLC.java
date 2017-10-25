@@ -463,6 +463,31 @@ public class PLC implements Runnable {
 			}
 		}
 	}
+	
+	public String getString(boolean fromPLC, int address, int len) throws Exception {
+	    byte[] StrBuffer = new byte[len];
+		byte[] source;
+
+		if (fromPLC) {
+			synchronized (this.plcToPcLock) {
+				source = this.plcToPc;
+				if (address >= source.length-3) {
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.plcToPcDb + " at address " + address);
+				}
+		        System.arraycopy(source, address, StrBuffer, 0, len);
+				return S7.GetStringAt(StrBuffer, address, len);
+			}
+		} else {
+			synchronized (this.pcToPlcLock) {
+				source = this.pcToPlc;
+				if (address >= source.length-3) {
+					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
+				}
+		        System.arraycopy(source, address, StrBuffer, 0, len);
+				return S7.GetStringAt(StrBuffer, address, len);
+			}
+		}
+	}
 
 	public void checkSetLiveBit() throws Exception {
 		if ((System.nanoTime() - this.pcToPlcLiveBit) > this.liveBitPCDuration * 1000000) {
@@ -496,12 +521,16 @@ public class PLC implements Runnable {
 				} else {
 					this.connected = true;
 					if (this.firstConnect == true) {
+						// read current db state, so we don't override it with zeroes
 						this.moka.ReadArea(this.pcToPlcAreaType, this.pcToPlcDb, 0, this.pcToPlc.length, this.pcToPlc);
-						this.pcToPlcLiveBit = System.nanoTime();
-						this.plcToPcLiveBit = System.nanoTime();
-						this.plcToPcLiveBitState = this.getBool(true, this.liveBitAddress, this.liveBitPosition);
 						this.firstConnect = false;
+						if (this.liveBitEnabled) {
+							this.pcToPlcLiveBit = System.nanoTime();
+							this.plcToPcLiveBit = System.nanoTime();
+							this.plcToPcLiveBitState = this.getBool(true, this.liveBitAddress, this.liveBitPosition);
+						}
 					}
+					
 					this.refreshPLCStatus();
 					if (this.liveBitEnabled) {
 						this.checkSetLiveBit();
