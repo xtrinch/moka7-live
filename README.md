@@ -146,3 +146,7 @@ The following example settings set bit at address 0.0 in both DB's as the 'live 
 **PLC connection status**
 
 Boolean indicating whether a PLC is connected or not can be found in PLC class' public variable `connected`.
+
+## Logging
+
+All logging with various priorities inside the library is done with slf4j. Meaning, you need a logger binding (for example slf4j-simple) to see logs.
