@@ -49,6 +49,7 @@ public class PLC implements Runnable {
 	public short liveBitPosition = 0;
 	public short liveBitPCDuration = 250; // in ms
 	public short liveBitPLCDuration = 500; // in ms
+    public int LastError = 0;
 
 	public PLC(String name,String ip,byte[] plcToPc,byte[] pcToPlc,int plcToPcDb,int pcToPlcDb,double[] booleans) {
 		this.plcToPc = plcToPc;
@@ -481,7 +482,7 @@ public class PLC implements Runnable {
 			synchronized (this.pcToPlcLock) {
 				source = this.pcToPlc;
 				if (address >= source.length-3) {
-					throw new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
+					 new Exception("PLC out of boundaries: " + this.PLCName + " in DB " + this.pcToPlcDb + " at address " + address);
 				}
 		        System.arraycopy(source, address, StrBuffer, 0, len);
 				return S7.GetStringAt(StrBuffer, address, len);
@@ -489,58 +490,67 @@ public class PLC implements Runnable {
 		}
 	}
 
-	public void checkSetLiveBit() throws Exception {
-		if ((System.nanoTime() - this.pcToPlcLiveBit) > this.liveBitPCDuration * 1000000) {
-			this.inverseBit(false, this.liveBitAddress, this.liveBitPosition);
-			this.pcToPlcLiveBit = System.nanoTime();
-		}
-		if (this.plcToPcLiveBitState != this.getBool(true, this.liveBitAddress, this.liveBitPosition)) {
-			// Live bit changed - reset the timer
-			this.plcToPcLiveBitState = this.getBool(true, this.liveBitAddress, this.liveBitPosition);
-			this.plcToPcLiveBit = System.nanoTime();
-		}
-		if ((System.nanoTime() - this.plcToPcLiveBit) > this.liveBitPLCDuration * 1000000) {
-			System.out.println(this.getBool(true, this.liveBitAddress, this.liveBitPosition));
-			System.out.println(System.nanoTime() - this.plcToPcLiveBit);
-			this.moka.Disconnect();
-			this.moka.Connected = false;
-			throw new Exception("No live bit from PLC: " + this.PLCName);
+	public void checkSetLiveBit() {
+		try {
+			if ((System.nanoTime() - this.pcToPlcLiveBit) > this.liveBitPCDuration * 1000000) {
+				this.inverseBit(false, this.liveBitAddress, this.liveBitPosition);
+				this.pcToPlcLiveBit = System.nanoTime();
+			}
+			if (this.plcToPcLiveBitState != this.getBool(true, this.liveBitAddress, this.liveBitPosition)) {
+				// Live bit changed - reset the timer
+				this.plcToPcLiveBitState = this.getBool(true, this.liveBitAddress, this.liveBitPosition);
+				this.plcToPcLiveBit = System.nanoTime();
+			}
+			if ((System.nanoTime() - this.plcToPcLiveBit) > this.liveBitPLCDuration * 1000000) {
+				System.out.println(this.getBool(true, this.liveBitAddress, this.liveBitPosition));
+				System.out.println(System.nanoTime() - this.plcToPcLiveBit);
+				this.moka.Disconnect();
+				this.moka.Connected = false;
+				logger.error("No live bit from PLC: " + this.PLCName);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
 	@Override
 	public void run() {
 		while(true) {
-			try {
-				if (this.moka.Connected == false) {
-					this.connected = false;
-					int error = this.moka.ConnectTo(this.PLCIp, this.rack, this.slot);
-					if (error > 0) {
-						logger.error(S7Client.ErrorText(error));
-					}
-				} else {
-					this.connected = true;
-					if (this.firstConnect == true) {
-						// read current db state, so we don't override it with zeroes
-						this.moka.ReadArea(this.pcToPlcAreaType, this.pcToPlcDb, 0, this.pcToPlc.length, this.pcToPlc);
-						this.firstConnect = false;
-						if (this.liveBitEnabled) {
-							this.pcToPlcLiveBit = System.nanoTime();
-							this.plcToPcLiveBit = System.nanoTime();
+			if (this.moka.Connected == false) {
+				this.connected = false;
+				int error = this.moka.ConnectTo(this.PLCIp, this.rack, this.slot);
+				if (error > 0) {
+					logger.error(S7Client.ErrorText(error));
+				}
+			} else {
+				this.connected = true;
+				this.LastError = this.moka.LastError;
+				
+				if (this.firstConnect == true) {
+					logger.info("Connected to PLC " + this.PLCName);
+					// read current db state, so we don't override it with zeroes
+					this.moka.ReadArea(this.pcToPlcAreaType, this.pcToPlcDb, 0, this.pcToPlc.length, this.pcToPlc);
+					this.firstConnect = false;
+					if (this.liveBitEnabled) {
+						this.pcToPlcLiveBit = System.nanoTime();
+						this.plcToPcLiveBit = System.nanoTime();
+						try {
 							this.plcToPcLiveBitState = this.getBool(true, this.liveBitAddress, this.liveBitPosition);
+						} catch (Exception e) {
+							logger.error(e.getMessage());
 						}
 					}
-					
-					this.refreshPLCStatus();
-					if (this.liveBitEnabled) {
-						this.checkSetLiveBit();
-					}
 				}
+				
+				this.refreshPLCStatus();
+				if (this.liveBitEnabled) {
+					this.checkSetLiveBit();
+				}
+			}
+			try {
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 	}
