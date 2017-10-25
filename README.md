@@ -25,6 +25,7 @@ Package can be installed via maven by adding the following to your pom.xml:
 
 ``` 
 import si.trina.moka7.live.PLC;
+import com.sourceforge.snap7.moka7.S7;
 
 /*
     args: 
@@ -37,7 +38,23 @@ import si.trina.moka7.live.PLC;
         ** array of addresses of booleans to listen to changes to
 */
 PLC plc1 = new PLC("Test PLC1","10.10.21.10",new byte[32],new byte[36],112,114,new double[]{0.1,0.2});
-PLC plc2 = new PLC("Test PLC2", "10.10.22.10",new byte[18],new byte[22],45,44,new double[]{0.1,0.2,0.3}); 
+
+
+/*
+    args: 
+        ** name of PLC
+        ** IP of PLC
+        ** length of db PLC->PC
+        ** length of PC->PLC
+        ** db (DataBase) number PLC->PC
+        ** db (DataBase) number PC->PLC
+        ** array of addresses of booleans to listen to changes to
+        ** rack number
+        ** slot number
+        ** area type of PLC->PC
+        ** area type of PC->PLC
+*/
+PLC plc2 = new PLC("Test PLC2", "10.10.22.10", 18, 22, 45, 44, new double[]{0.1,0.2,0.3}, 0, 1, S7.AreaDB, S7AreaDB); 
 ```
 
 **3. Add classes that implement interface PLCListener to PLC's `ArrayList<PLCListener> listener` array**
